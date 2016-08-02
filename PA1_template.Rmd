@@ -20,7 +20,8 @@ This assignment makes use of data from a personal activity monitoring device. Th
 
 The data for this assignment can be downloaded from this [link](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip).
 
-```{r getdata}
+Though unecessary, the code snippet below can be used to retrieve a copy of the data from the provided link.
+```{r getdata, echo=TRUE}
     # retrieve a fresh copy of the data set, if missing
     url<-"https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
     zfn<-"activity.zip"
@@ -62,7 +63,23 @@ Show any code that is needed to
 
 1. Load the data (i.e. **read.csv()**)
 
+```{r readdata, echo=TRUE}
+    # load data into R, avoiding factors
+    mydata<-read.csv(fn, colClasses=c("integer","character","integer"))
+```
+
 2. Process/transform the data (if necessary) into a format suitable for your analysis
+
+```{r convertdata, echo=TRUE}
+    # convert date (char) to date
+    mydata$date<-as.POSIXct(mydata$date, format="%Y-%m-%d")
+```
+
+Summary of the data & structure
+```{r exploredata, echo=TRUE}
+    str(mydata)
+    summary(mydata)
+```
 
 
 **What is mean total number of steps taken per day?**
@@ -71,9 +88,25 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 1. Calculate the total number of steps taken per day
 
+``` {r stepsperday, echo=TRUE}
+    # sum steps by date
+    dailysteps<-aggregate(steps ~ date, mydata, FUN=sum)
+    dailysteps
+```
+
 2. If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day
 
+``` {r histstepsperday, echo=TRUE}
+    ### plot histogram of the total number of steps per day
+    hist(dailysteps$steps, xlab="Steps taken in a day", main="Histogram of the total number of steps taken each day", col="green")
+```
+
 3. Calculate and report the mean and median of the total number of steps taken per day
+
+``` {r summarystepsperday, echo=TRUE}
+    # summarize the total steps per day to show the mean and median steps taken per day
+    summary(dailysteps$steps)
+```
 
 
 **What is the average daily activity pattern?**
