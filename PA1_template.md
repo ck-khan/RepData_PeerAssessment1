@@ -16,6 +16,7 @@ The data for this assignment can be downloaded from this [link](https://d396qusz
 
 Though unecessary, the code snippet below can be used to retrieve a copy of the data from the provided link.
 
+
 ```r
     # retrieve a fresh copy of the data set, if missing
     url<-"https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
@@ -110,7 +111,7 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 ```r
     # sum steps by date
-    dailysteps<-aggregate(steps ~ date, mydata, FUN=sum)
+    dailysteps<-aggregate(steps ~ date, mydata, FUN=sum, na.action=na.omit)
     dailysteps
 ```
 
@@ -176,7 +177,7 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 ```r
     ### plot histogram of the total number of steps per day
-    hist(dailysteps$steps, xlab="Steps taken in a day", main="Histogram of the total number of steps taken each day", col="green")
+    hist(dailysteps$steps, xlab="Steps taken in a day", main="Histogram of the total number of steps taken each day", col="green", ylim=c(0,30), labels=TRUE)
 ```
 
 ![](PA1_template_files/figure-html/histstepsperday-1.png)<!-- -->
@@ -199,7 +200,40 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 1. Make a time series plot (i.e. **type = "l"**) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
+
+```r
+    # summarize the average steps across all days for each 5-minute interval
+    intervalstepsavg<-aggregate(steps ~ interval, mydata, FUN=mean, na.action=na.omit)
+    
+    # plot a line/time series (intervals) chart with steps averaged across all days
+    plot(intervalstepsavg$interval, intervalstepsavg$steps, type = "l", xlab="5-minute interval (in a day)", ylab="Average number of steps taken, across all days", main="Average number of steps taken (5-minute intervals in a day)", col="blue", ylim=c(0,250))
+```
+
+![](PA1_template_files/figure-html/intervalsteps-1.png)<!-- -->
+
+```r
+    #axis(1, at=unique(intervalstepsavg$interval)[seq(1,288,by=60)])
+```
+
+
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+
+
+```r
+    # find the max of the averages
+    maxintervalstepsavg=intervalstepsavg[which.max(intervalstepsavg$steps),]
+    maxintervalstepsavg
+```
+
+```
+##     interval    steps
+## 104      835 206.1698
+```
+
+```r
+    # label the maximum point
+    #text(maxintervalstepsavg$interval, maxintervalstepsavg$steps, labels=c("max point"))
+```
 
 
 **Imputing missing values**
