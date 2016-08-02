@@ -148,6 +148,3 @@ In addition to submitting the URL for your GitHub repository, you will need to s
 
 ***
 
-
-
-
